@@ -1,8 +1,8 @@
 package cn.dengsz;
 
+import cn.dengsz.common.Constants;
 import cn.dengsz.core.HerosListPageProcessor;
 import cn.dengsz.core.LolHeroPipeline;
-import cn.dengsz.core.LolPicPageProcessor;
 import us.codecraft.webmagic.Spider;
 
 /**
@@ -10,18 +10,16 @@ import us.codecraft.webmagic.Spider;
  */
 public class App
 {
-    private static final String HERO_URL = "https://game.gtimg.cn/images/lol/act/img/js/heroList/hero_list.js?ts=2780565";
-    private static final String PIC_URL = "https://game.gtimg.cn/images/lol/act/img/js/hero/103.js?ts=2780670";
 
     public static void main( String[] args ) {
         // 调用数据爬虫进程
+        // 可以增加线程来提高运行效率(thread)
+        long beginTime = System.currentTimeMillis();
         Spider.create(new HerosListPageProcessor())
-                .addUrl(HERO_URL)
+                .addUrl(Constants.HERO_URL)
                 .addPipeline(new LolHeroPipeline())
+                .thread(5)
                 .run();
-        // 调用爬取图片的爬虫
-        Spider.create(new LolPicPageProcessor())
-                .addUrl(PIC_URL)
-                .run();
+        System.out.printf("用时 %d ms",System.currentTimeMillis()-beginTime);
     }
 }
